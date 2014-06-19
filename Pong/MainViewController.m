@@ -85,7 +85,7 @@
     cell.textLabel.textColor = UIColorFromRGB(WHITE);
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.selectedBackgroundView = [UIView new];
-    cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(WHITE);
+    cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(GREENDARK);
     
     cell.textLabel.text = user.name;
     
