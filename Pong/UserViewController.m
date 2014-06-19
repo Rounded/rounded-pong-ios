@@ -8,7 +8,9 @@
 
 #import "UserViewController.h"
 #import <AFNetworking.h>
+#import <SVProgressHUD.h>
 #import "CoffeeScore.h"
+
 
 @interface UserViewController () <MCSwipeTableViewCellDelegate>
 
@@ -29,9 +31,11 @@
 
 - (void)grabScores
 {
+    [SVProgressHUD showWithStatus:@"Pulling scores"];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    [manager GET:[NSString stringWithFormat:@"http://localhost:3000/users/%@.json", self.user.id] parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *coffeeScores) {
+    [manager GET:[NSString stringWithFormat:@"http://rounded-pong.herokuapp.com/users/%@.json", self.user.id] parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *coffeeScores) {
+        [SVProgressHUD dismiss];
         [coffeeScores enumerateObjectsUsingBlock:^(CoffeeScore *coffeeScoreFromArray, NSUInteger idx, BOOL *stop) {
             CoffeeScore *coffeeScore = [CoffeeScore MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"paid_by_id = %@ AND paid_to_id = %@", [coffeeScoreFromArray valueForKey:@"paid_by_id"], self.user.id]]];
             
@@ -46,6 +50,7 @@
         }];
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [SVProgressHUD showErrorWithStatus:@"YA GOT YA-SELF AN ERROR"];
         NSLog(@"Error: %@", error);
     }];
 
@@ -69,7 +74,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    User *user = [[User MR_findAllWithPredicate:[NSPredicate predicateWithFormat:@"id != %@", self.user.id]] objectAtIndex:indexPath.row];
+    User *user = [[User MR_findAllSortedBy:@"name" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"id != %@", self.user.id]] objectAtIndex:indexPath.row];
     CoffeeScore *coffeeScore = [CoffeeScore MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"paid_by_id = %@ AND paid_to_id = %@", user.id, self.user.id]]];
     if (!coffeeScore) {
         coffeeScore = [CoffeeScore MR_createEntity];
@@ -145,8 +150,8 @@
     [self.tableView reloadData];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_by_id, @"coffee_score[paid_to_id]":coffeeScore.paid_to_id };
-    [manager POST:@"http://localhost:3000/coffee_scores.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSDictionary *parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_by_id, @"coffee_score[paid_to_id]":coffeeScore.paid_to_id, @"coffee_score[delta]": [NSString stringWithFormat:@"%d", valueToChange] };
+    [manager POST:@"http://rounded-pong.herokuapp.com/coffee_scores.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"JSON: %@", responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);

@@ -33,7 +33,9 @@
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    [manager GET:@"http://localhost:3000/users.json" parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *users) {
+    [SVProgressHUD showWithStatus:@"Pulling users"];
+    [manager GET:@"http://rounded-pong.herokuapp.com/users.json" parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *users) {
+        [SVProgressHUD dismiss];
         [users enumerateObjectsUsingBlock:^(User *user, NSUInteger idx, BOOL *stop) {
             if (![User MR_findFirstByAttribute:@"id" withValue:[user valueForKey:@"id"]]) {
                 User *u = [User MR_createEntity];
@@ -43,6 +45,7 @@
         }];
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [SVProgressHUD showErrorWithStatus:@"YA GOT YA-SELF AN ERROR"];
         NSLog(@"Error: %@", error);
     }];
 }
@@ -66,7 +69,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    User *user = [[User MR_findAll] objectAtIndex:indexPath.row];
+    User *user = [[User MR_findAllSortedBy:@"name" ascending:YES] objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier = @"tableViewCellIdentifier";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"tableViewCellIdentifier"];
@@ -84,7 +87,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UserViewController *userViewController = [UserViewController new];
-    userViewController.user = [[User MR_findAll] objectAtIndex:indexPath.row];
+    userViewController.user = [[User MR_findAllSortedBy:@"name" ascending:YES] objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:userViewController animated:true];
 }
 

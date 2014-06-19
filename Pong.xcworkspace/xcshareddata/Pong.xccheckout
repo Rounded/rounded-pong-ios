@@ -5,36 +5,46 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>9D8D57F9-A620-449C-AB40-1EF0BCAD2ED8</string>
+	<string>075E324C-B1DD-4670-9F22-A86BE8425F81</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Pong</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>A5506352-E89A-4E03-A634-CC0931A06F50</key>
-		<string>ssh://github.com/Rounded/rounded-pong.git</string>
+		<key>00382C54-B3A7-4895-A1E8-7FBF1636117C</key>
+		<string>ssh://github.com/Rounded/rounded-pong-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>ios/Pong/Pong.xcworkspace</string>
+	<string>RoundedPong/Pong/Pong.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>A5506352-E89A-4E03-A634-CC0931A06F50</key>
+		<key>00382C54-B3A7-4895-A1E8-7FBF1636117C</key>
+		<string>..</string>
+		<key>6B3B6EC0-3D8A-4035-8E0C-08296FC3DC7E</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/Rounded/rounded-pong.git</string>
+	<string>ssh://github.com/Rounded/rounded-pong-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>A5506352-E89A-4E03-A634-CC0931A06F50</string>
+	<string>6B3B6EC0-3D8A-4035-8E0C-08296FC3DC7E</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>A5506352-E89A-4E03-A634-CC0931A06F50</string>
+			<string>00382C54-B3A7-4895-A1E8-7FBF1636117C</string>
 			<key>IDESourceControlWCCName</key>
-			<string>RoundedPong</string>
+			<string>Pong</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>6B3B6EC0-3D8A-4035-8E0C-08296FC3DC7E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Webstuff</string>
 		</dict>
 	</array>
 </dict>
