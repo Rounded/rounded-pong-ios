@@ -24,6 +24,11 @@
 {
     [super viewDidLoad];
     self.title = @"Rounded Scoreboard";
+    self.view.backgroundColor = UIColorFromRGB(GREEN);
+    self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
+    self.navigationController.navigationBar.tintColor = UIColorFromRGB(WHITE);
+    self.navigationController.navigationBar.translucent = NO;
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
     [self.tableView setNeedsLayout];
     
     [self grabUsers];
@@ -76,7 +81,12 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    cell.backgroundColor = UIColorFromRGB(GREEN);
+    cell.textLabel.textColor = UIColorFromRGB(WHITE);
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectedBackgroundView = [UIView new];
+    cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(WHITE);
+    
     cell.textLabel.text = user.name;
     
     return cell;
@@ -86,6 +96,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     UserViewController *userViewController = [UserViewController new];
     userViewController.user = [[User MR_findAllSortedBy:@"name" ascending:YES] objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:userViewController animated:true];
@@ -94,10 +105,12 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, screenRect.size.height)];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = [UIColor whiteColor];
+        _tableView.backgroundColor = UIColorFromRGB(GREEN);
+        _tableView.separatorColor = UIColorFromRGB(GREENDARK);
         [self.view addSubview:_tableView];
     }
     return _tableView;

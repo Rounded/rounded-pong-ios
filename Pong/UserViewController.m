@@ -23,19 +23,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [NSString stringWithFormat:@"%@ is owed by...", self.user.name];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.title = self.user.name;
+    self.view.backgroundColor = UIColorFromRGB(GREENDARK);
+
     [self.tableView setNeedsLayout];
     [self grabScores];
 }
 
 - (void)grabScores
 {
-    [SVProgressHUD showWithStatus:@"Pulling scores"];
+//    [SVProgressHUD showWithStatus:@"Pulling scores"];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager GET:[NSString stringWithFormat:@"http://rounded-pong.herokuapp.com/users/%@.json", self.user.id] parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *coffeeScores) {
-        [SVProgressHUD dismiss];
+//        [SVProgressHUD dismiss];
         [coffeeScores enumerateObjectsUsingBlock:^(CoffeeScore *coffeeScoreFromArray, NSUInteger idx, BOOL *stop) {
             CoffeeScore *coffeeScore = [CoffeeScore MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"paid_by_id = %@ AND paid_to_id = %@", [coffeeScoreFromArray valueForKey:@"paid_by_id"], self.user.id]]];
             
@@ -61,6 +62,28 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 54;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 40;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    if([view isKindOfClass:[UITableViewHeaderFooterView class]]){
+        UITableViewHeaderFooterView *tableViewHeaderFooterView = (UITableViewHeaderFooterView *) view;
+        tableViewHeaderFooterView.backgroundColor = UIColorFromRGB(GREEN);
+        tableViewHeaderFooterView.tintColor = UIColorFromRGB(GREEN);
+        tableViewHeaderFooterView.backgroundView.alpha = 1.0;
+        tableViewHeaderFooterView.alpha = 1.0;
+        tableViewHeaderFooterView.textLabel.textColor = UIColorFromRGB(GREENDARKER);
+    }
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return [NSString stringWithFormat:@"%@ is owed by", self.user.name];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -96,13 +119,17 @@
             cell.separatorInset = UIEdgeInsetsZero;
         }
         
-        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         
         // Setting the background color of the cell.
-        cell.contentView.backgroundColor = [UIColor whiteColor];
-        
+        cell.backgroundColor = UIColorFromRGB(GREEN);
+        cell.textLabel.textColor = UIColorFromRGB(WHITE);
+        cell.selectedBackgroundView = [UIView new];
+        cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(WHITE);
+
         countLabel = [[UILabel alloc] initWithFrame:CGRectMake(280, 0, 20, 54)];
         countLabel.textAlignment = NSTextAlignmentRight;
+        countLabel.textColor = UIColorFromRGB(WHITE);
         [cell.contentView addSubview:countLabel];
     }
     
@@ -168,10 +195,12 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        CGRect screenRect = [[UIScreen mainScreen] bounds];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, screenRect.size.height)];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        _tableView.backgroundColor = [UIColor whiteColor];
+        _tableView.backgroundColor = UIColorFromRGB(GREEN);
+        _tableView.separatorColor = UIColorFromRGB(GREENDARK);
         [self.view addSubview:_tableView];
     }
     return _tableView;
