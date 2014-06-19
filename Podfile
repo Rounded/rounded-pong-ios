@@ -1,0 +1,16 @@
+# Uncomment this line to define a global platform for your project
+# platform :ios, "6.0"
+
+target "Pong" do
+
+pod "AFNetworking", "~> 2.0"
+pod 'SVProgressHUD', :head
+pod 'MagicalRecord'
+pod 'MCSwipeTableViewCell'
+
+end
+
+target "PongTests" do
+
+end
+
