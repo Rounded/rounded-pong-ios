@@ -6,12 +6,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "cross.png"
+      "filename" : "icon_paid.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "cross@2x.png"
+      "filename" : "icon_paid@2x.png"
     }
   ],
   "info" : {

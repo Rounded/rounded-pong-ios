@@ -15,6 +15,7 @@
 @interface MainViewController ()
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
 
@@ -23,22 +24,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Rounded Scoreboard";
+    self.title = @"WHO ARE YOU?";
     self.view.backgroundColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.tintColor = UIColorFromRGB(WHITE);
     self.navigationController.navigationBar.translucent = NO;
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor whiteColor]}];
-    [self.tableView setNeedsLayout];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Raleway-Medium" size:18], NSForegroundColorAttributeName: [UIColor whiteColor] }];
     
-    [self grabUsers];
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor = UIColorFromRGB(WHITE);
+    [self.refreshControl addTarget:self action:@selector(grabUsers:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
+    
+    [SVProgressHUD showWithStatus:@"Pulling users"];
+    [self grabUsers:nil];
 }
 
-- (void)grabUsers
+- (void)grabUsers:(id)sender
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
-    [SVProgressHUD showWithStatus:@"Pulling users"];
     [manager GET:@"http://rounded-pong.herokuapp.com/users.json" parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *users) {
         [SVProgressHUD dismiss];
         [users enumerateObjectsUsingBlock:^(User *user, NSUInteger idx, BOOL *stop) {
@@ -48,10 +53,12 @@
                 u.id = [user valueForKey:@"id"];
             }            
         }];
+        [self.refreshControl endRefreshing];
         [self.tableView reloadData];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [SVProgressHUD showErrorWithStatus:@"YA GOT YA-SELF AN ERROR"];
-        NSLog(@"Error: %@", error);
+        NSLog(@"%@",error);
+        [SVProgressHUD showErrorWithStatus:@"Woops"];
+        [self.refreshControl endRefreshing];
     }];
 }
 
@@ -83,11 +90,12 @@
     }
     cell.backgroundColor = UIColorFromRGB(GREEN);
     cell.textLabel.textColor = UIColorFromRGB(WHITE);
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.selectedBackgroundView = [UIView new];
     cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(GREENDARK);
+    cell.textLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
     
-    cell.textLabel.text = user.name;
+    cell.textLabel.text = user.name.uppercaseString;
     
     return cell;
 }
@@ -97,16 +105,24 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    User *user = [[User MR_findAllSortedBy:@"name" ascending:YES] objectAtIndex:indexPath.row];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:user.id forKey:@"currentUserID"];
+    [defaults synchronize];
+    
+    
     UserViewController *userViewController = [UserViewController new];
-    userViewController.user = [[User MR_findAllSortedBy:@"name" ascending:YES] objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:userViewController animated:true];
+    userViewController.user = user;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:userViewController];
+    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
 -(UITableView *)tableView
 {
     if (!_tableView) {
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, screenRect.size.height)];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, screenRect.size.height-64)];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.backgroundColor = UIColorFromRGB(GREEN);

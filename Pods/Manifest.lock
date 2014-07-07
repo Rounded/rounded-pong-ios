@@ -27,7 +27,7 @@ PODS:
   - SVProgressHUD (HEAD based on 1.0)
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.0)
+  - AFNetworking
   - MagicalRecord
   - MCSwipeTableViewCell
   - SVProgressHUD (HEAD)

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "70513F6346B046E79A806FB9"
+               BlueprintIdentifier = "522AC49BFA174757AF9815C5"
                BuildableName = "libPods-Pong-SVProgressHUD.a"
                BlueprintName = "Pods-Pong-SVProgressHUD"
                ReferencedContainer = "container:Pods.xcodeproj">

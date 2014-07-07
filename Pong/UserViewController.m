@@ -15,6 +15,7 @@
 @interface UserViewController () <MCSwipeTableViewCellDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
 
@@ -26,17 +27,27 @@
     self.title = self.user.name;
     self.view.backgroundColor = UIColorFromRGB(GREENDARK);
 
-    [self.tableView setNeedsLayout];
-    [self grabScores];
+    self.navigationController.navigationItem.hidesBackButton = TRUE;
+    self.view.backgroundColor = UIColorFromRGB(GREEN);
+    self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
+    self.navigationController.navigationBar.tintColor = UIColorFromRGB(WHITE);
+    self.navigationController.navigationBar.translucent = NO;
+    [self.navigationController.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Raleway-Medium" size:18], NSForegroundColorAttributeName: [UIColor whiteColor] }];
+
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.tintColor = UIColorFromRGB(WHITE);
+    [self.refreshControl addTarget:self action:@selector(grabScores:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
+    [self grabScores:nil];
 }
 
-- (void)grabScores
+- (void)grabScores:(id)sender
 {
-//    [SVProgressHUD showWithStatus:@"Pulling scores"];
+    [SVProgressHUD showWithStatus:@"Pulling latest scores"];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager GET:[NSString stringWithFormat:@"http://rounded-pong.herokuapp.com/users/%@.json", self.user.id] parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *coffeeScores) {
-//        [SVProgressHUD dismiss];
+        [SVProgressHUD dismiss];
         [coffeeScores enumerateObjectsUsingBlock:^(CoffeeScore *coffeeScoreFromArray, NSUInteger idx, BOOL *stop) {
             CoffeeScore *coffeeScore = [CoffeeScore MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"paid_by_id = %@ AND paid_to_id = %@", [coffeeScoreFromArray valueForKey:@"paid_by_id"], self.user.id]]];
             
@@ -50,8 +61,10 @@
             }
         }];
         [self.tableView reloadData];
+        [self.refreshControl endRefreshing];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        [SVProgressHUD showErrorWithStatus:@"YA GOT YA-SELF AN ERROR"];
+        [SVProgressHUD showErrorWithStatus:@"Woop! There's an error."];
+        [self.refreshControl endRefreshing];
         NSLog(@"Error: %@", error);
     }];
 
@@ -62,28 +75,6 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 54;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 40;
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
-{
-    if([view isKindOfClass:[UITableViewHeaderFooterView class]]){
-        UITableViewHeaderFooterView *tableViewHeaderFooterView = (UITableViewHeaderFooterView *) view;
-        tableViewHeaderFooterView.backgroundColor = UIColorFromRGB(GREEN);
-        tableViewHeaderFooterView.tintColor = UIColorFromRGB(GREEN);
-        tableViewHeaderFooterView.backgroundView.alpha = 1.0;
-        tableViewHeaderFooterView.alpha = 1.0;
-        tableViewHeaderFooterView.textLabel.textColor = UIColorFromRGB(GREENDARKER);
-    }
-}
-
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return [NSString stringWithFormat:@"%@ is owed by", self.user.name];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -109,10 +100,9 @@
     static NSString *CellIdentifier = @"Cell";
     
     MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nil];
-    UILabel *countLabel = nil;
     
     if (!cell) {
-        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         
         // Remove inset of iOS 7 separators.
         if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
@@ -126,30 +116,35 @@
         cell.textLabel.textColor = UIColorFromRGB(WHITE);
         cell.selectedBackgroundView = [UIView new];
         cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(WHITE);
-
-        countLabel = [[UILabel alloc] initWithFrame:CGRectMake(280, 0, 20, 54)];
-        countLabel.textAlignment = NSTextAlignmentRight;
-        countLabel.textColor = UIColorFromRGB(WHITE);
-        [cell.contentView addSubview:countLabel];
     }
     
     // Configuring the views and colors.
-    UIView *checkView = [self viewWithImageName:@"check"];
+    UIView *checkView = [self viewWithImageName:@"icon_win"];
     UIColor *greenColor = UIColorFromRGB(GREENDARKER);
     
-    UIView *crossView = [self viewWithImageName:@"cross"];
+    UIView *crossView = [self viewWithImageName:@"icon_paid"];
     UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
     
     // Setting the default inactive state color to the tableView background color.
     [cell setDefaultColor:[UIColor lightGrayColor]];
     
-    [cell.textLabel setText:user.name];
+    cell.textLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
 
-    if (coffeeScore.coffee_count) {
-        countLabel.text = [NSString stringWithFormat:@"%@", coffeeScore.coffee_count];
+    if (coffeeScore.coffee_count == 0) {
+        cell.textLabel.text = user.name.uppercaseString;
+    } else if (coffeeScore.coffee_count > 0) {
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ OWES YOU", user.name.uppercaseString]];
+        [attrText addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(GREENDARKER) range:NSMakeRange(user.name.length, 9)];
+        cell.textLabel.attributedText = attrText;
     } else {
-        countLabel.text = @"0";
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ IS OWED", user.name.uppercaseString]];
+        [attrText addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(GREENDARKER) range:NSMakeRange(user.name.length, 8)];
+        cell.textLabel.attributedText = attrText;
     }
+
+    cell.detailTextLabel.text = coffeeScore.coffee_count.stringValue;
+    cell.detailTextLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
+    cell.detailTextLabel.textColor = [UIColor whiteColor];
     
     // Adding gestures per state basis.
     [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
@@ -196,7 +191,7 @@
 {
     if (!_tableView) {
         CGRect screenRect = [[UIScreen mainScreen] bounds];
-        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, screenRect.size.height)];
+        _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, screenRect.size.height-64)];
         _tableView.dataSource = self;
         _tableView.delegate = self;
         _tableView.backgroundColor = UIColorFromRGB(GREEN);

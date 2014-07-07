@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>70FDB56F-554A-4F01-9EBF-50B8808F5C47</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Pong</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>00382C54-B3A7-4895-A1E8-7FBF1636117C</key>
+		<string>ssh://github.com/Rounded/rounded-pong-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Pong.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>00382C54-B3A7-4895-A1E8-7FBF1636117C</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/Rounded/rounded-pong-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>00382C54-B3A7-4895-A1E8-7FBF1636117C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>00382C54-B3A7-4895-A1E8-7FBF1636117C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Pong</string>
+		</dict>
+	</array>
+</dict>
+</plist>

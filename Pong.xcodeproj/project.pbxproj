@@ -27,6 +27,8 @@
 		C310B96B195233BF0015E726 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C310B96A195233BF0015E726 /* MainViewController.m */; };
 		C35D9C971952468800AB00F2 /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C35D9C961952468800AB00F2 /* UserViewController.m */; };
 		C35D9C9D1952485F00AB00F2 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = C35D9C9C1952485F00AB00F2 /* User.m */; };
+		C377A7E7195344B80054CBC5 /* Asap-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C377A7E6195344B80054CBC5 /* Asap-Regular.otf */; };
+		C377A7E9195344DE0054CBC5 /* Raleway-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = C377A7E8195344DE0054CBC5 /* Raleway-Medium.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +68,8 @@
 		C35D9C961952468800AB00F2 /* UserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserViewController.m; sourceTree = "<group>"; };
 		C35D9C9B1952485F00AB00F2 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
 		C35D9C9C1952485F00AB00F2 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
+		C377A7E6195344B80054CBC5 /* Asap-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Asap-Regular.otf"; sourceTree = "<group>"; };
+		C377A7E8195344DE0054CBC5 /* Raleway-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Raleway-Medium.otf"; sourceTree = "<group>"; };
 		CD5D8A5F1F274108BC2AFE78 /* libPods-Pong.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Pong.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED81C9649BAD4F96979BD831 /* Pods-Pong.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Pong.xcconfig"; path = "Pods/Pods-Pong.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,6 +137,8 @@
 		C310B9361952310A0015E726 /* Pong */ = {
 			isa = PBXGroup;
 			children = (
+				C377A7E6195344B80054CBC5 /* Asap-Regular.otf */,
+				C377A7E8195344DE0054CBC5 /* Raleway-Medium.otf */,
 				C310B93F1952310A0015E726 /* AppDelegate.h */,
 				C310B9401952310A0015E726 /* AppDelegate.m */,
 				C310B969195233BF0015E726 /* MainViewController.h */,
@@ -259,6 +265,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C377A7E9195344DE0054CBC5 /* Raleway-Medium.otf in Resources */,
+				C377A7E7195344B80054CBC5 /* Asap-Regular.otf in Resources */,
 				C310B93B1952310A0015E726 /* InfoPlist.strings in Resources */,
 				C310B9461952310A0015E726 /* Images.xcassets in Resources */,
 			);

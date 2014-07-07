@@ -3,7 +3,7 @@
 
 target "Pong" do
 
-pod "AFNetworking", "~> 2.0"
+pod "AFNetworking"
 pod 'SVProgressHUD', :head
 pod 'MagicalRecord'
 pod 'MCSwipeTableViewCell'

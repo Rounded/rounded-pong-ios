@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "MainViewController.h"
+#import "UserViewController.h"
 
 @implementation AppDelegate
 
@@ -23,10 +24,16 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     
-    MainViewController *mainViewController = [MainViewController new];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
-    [self.window setRootViewController:navigationController];
-
+//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentUserID"]) {
+//        UserViewController *controller = [UserViewController new];
+//        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+//        [self.window setRootViewController:navigationController];
+//    } else {
+        MainViewController *mainViewController = [MainViewController new];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
+        [self.window setRootViewController:navigationController];
+//    }
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
