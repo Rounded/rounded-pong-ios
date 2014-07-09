@@ -2,7 +2,7 @@
 //  CoffeeScore.h
 //  Pong
 //
-//  Created by bw on 6/18/14.
+//  Created by bw on 7/7/14.
 //  Copyright (c) 2014 bw. All rights reserved.
 //
 
@@ -12,8 +12,9 @@
 
 @interface CoffeeScore : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * paid_to_id;
-@property (nonatomic, retain) NSNumber * paid_by_id;
 @property (nonatomic, retain) NSNumber * coffee_count;
+@property (nonatomic, retain) NSNumber * paid_by_id;
+@property (nonatomic, retain) NSNumber * paid_to_id;
+@property (nonatomic, retain) NSNumber * delta;
 
 @end

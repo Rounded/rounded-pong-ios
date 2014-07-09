@@ -11,6 +11,7 @@
 #import <AFNetworking.h>
 #import "User.h"
 #import <SVProgressHUD.h>
+#import "AppDelegate.h"
 
 @interface MainViewController ()
 
@@ -27,12 +28,12 @@
     self.title = @"WHO ARE YOU?";
     self.view.backgroundColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
-    self.navigationController.navigationBar.tintColor = UIColorFromRGB(WHITE);
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.translucent = NO;
     [self.navigationController.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Raleway-Medium" size:18], NSForegroundColorAttributeName: [UIColor whiteColor] }];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl.tintColor = UIColorFromRGB(WHITE);
+    self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(grabUsers:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:self.refreshControl];
     
@@ -51,7 +52,9 @@
                 User *u = [User MR_createEntity];
                 u.name = [user valueForKey:@"name"];
                 u.id = [user valueForKey:@"id"];
-            }            
+            }
+            AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+            [appDelegate.managedObjectContext save:nil];
         }];
         [self.refreshControl endRefreshing];
         [self.tableView reloadData];
@@ -89,7 +92,7 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     cell.backgroundColor = UIColorFromRGB(GREEN);
-    cell.textLabel.textColor = UIColorFromRGB(WHITE);
+    cell.textLabel.textColor = [UIColor whiteColor];
 //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.selectedBackgroundView = [UIView new];
     cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(GREENDARK);

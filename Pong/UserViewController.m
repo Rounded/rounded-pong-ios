@@ -24,26 +24,29 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = self.user.name;
+    
+    self.user = [User MR_findFirstByAttribute:@"id" withValue:[[NSUserDefaults standardUserDefaults] objectForKey:@"currentUserID"]];
+    
+    self.title = self.user.name.uppercaseString;
     self.view.backgroundColor = UIColorFromRGB(GREENDARK);
 
     self.navigationController.navigationItem.hidesBackButton = TRUE;
     self.view.backgroundColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
-    self.navigationController.navigationBar.tintColor = UIColorFromRGB(WHITE);
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.translucent = NO;
     [self.navigationController.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Raleway-Medium" size:18], NSForegroundColorAttributeName: [UIColor whiteColor] }];
 
     self.refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl.tintColor = UIColorFromRGB(WHITE);
+    self.refreshControl.tintColor = [UIColor whiteColor];
     [self.refreshControl addTarget:self action:@selector(grabScores:) forControlEvents:UIControlEventValueChanged];
     [self.tableView addSubview:self.refreshControl];
+    [SVProgressHUD showWithStatus:@"Pulling latest scores"];
     [self grabScores:nil];
 }
 
 - (void)grabScores:(id)sender
 {
-    [SVProgressHUD showWithStatus:@"Pulling latest scores"];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFJSONResponseSerializer serializer];
     [manager GET:[NSString stringWithFormat:@"http://rounded-pong.herokuapp.com/users/%@.json", self.user.id] parameters:nil success:^(AFHTTPRequestOperation *operation, NSArray *coffeeScores) {
@@ -113,9 +116,9 @@
         
         // Setting the background color of the cell.
         cell.backgroundColor = UIColorFromRGB(GREEN);
-        cell.textLabel.textColor = UIColorFromRGB(WHITE);
+        cell.textLabel.textColor = [UIColor whiteColor];
         cell.selectedBackgroundView = [UIView new];
-        cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(WHITE);
+        cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(GREENDARKER);
     }
     
     // Configuring the views and colors.
@@ -123,16 +126,16 @@
     UIColor *greenColor = UIColorFromRGB(GREENDARKER);
     
     UIView *crossView = [self viewWithImageName:@"icon_paid"];
-    UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
+    UIColor *redColor = UIColorFromRGB(RED);
     
     // Setting the default inactive state color to the tableView background color.
     [cell setDefaultColor:[UIColor lightGrayColor]];
     
     cell.textLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
 
-    if (coffeeScore.coffee_count == 0) {
+    if (coffeeScore.coffee_count.intValue == 0) {
         cell.textLabel.text = user.name.uppercaseString;
-    } else if (coffeeScore.coffee_count > 0) {
+    } else if (coffeeScore.coffee_count.intValue > 0) {
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ OWES YOU", user.name.uppercaseString]];
         [attrText addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(GREENDARKER) range:NSMakeRange(user.name.length, 9)];
         cell.textLabel.attributedText = attrText;
@@ -141,8 +144,8 @@
         [attrText addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(GREENDARKER) range:NSMakeRange(user.name.length, 8)];
         cell.textLabel.attributedText = attrText;
     }
-
-    cell.detailTextLabel.text = coffeeScore.coffee_count.stringValue;
+        
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", abs(coffeeScore.coffee_count.intValue)];
     cell.detailTextLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
     cell.detailTextLabel.textColor = [UIColor whiteColor];
     
@@ -168,7 +171,7 @@
 
 - (void)changeCoffeeScore:(CoffeeScore *)coffeeScore withValue:(int)valueToChange
 {
-    coffeeScore.coffee_count = [NSNumber numberWithInt:(coffeeScore.coffee_count.intValue+valueToChange)];
+    coffeeScore.coffee_count = [NSNumber numberWithInt:(coffeeScore.coffee_count.intValue+1)];
     [self.tableView reloadData];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];

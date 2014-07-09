@@ -25,4 +25,4 @@
 #define GREEN 0X25ba84
 #define GREENDARK 0X21a977
 #define GREENDARKER 0X10513e
-#define WHITE 0Xfefdf5
+#define RED 0Xd64746

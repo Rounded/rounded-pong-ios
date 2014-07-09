@@ -24,15 +24,15 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     
-//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentUserID"]) {
-//        UserViewController *controller = [UserViewController new];
-//        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-//        [self.window setRootViewController:navigationController];
-//    } else {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentUserID"] && [User MR_findAll].count > 0) {
+        UserViewController *controller = [UserViewController new];
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+        [self.window setRootViewController:navigationController];
+    } else {
         MainViewController *mainViewController = [MainViewController new];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
         [self.window setRootViewController:navigationController];
-//    }
+    }
     
     [self.window makeKeyAndVisible];
     return YES;
