@@ -7,6 +7,7 @@ pod "AFNetworking"
 pod 'SVProgressHUD', :head
 pod 'MagicalRecord'
 pod 'MCSwipeTableViewCell'
+pod 'pop', '~> 1.0'
 
 end
 

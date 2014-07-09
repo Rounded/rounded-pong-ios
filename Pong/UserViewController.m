@@ -10,11 +10,12 @@
 #import <AFNetworking.h>
 #import <SVProgressHUD.h>
 #import "CoffeeScore.h"
-
+#import <POP/POP.h>
 
 @interface UserViewController () <MCSwipeTableViewCellDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
@@ -43,6 +44,9 @@
     [self.tableView addSubview:self.refreshControl];
     [SVProgressHUD showWithStatus:@"Pulling latest scores"];
     [self grabScores:nil];
+ 
+    [self.imageView setImage:[UIImage imageNamed:self.user.name]];
+    [self.view addSubview:_imageView];
 }
 
 - (void)grabScores:(id)sender
@@ -171,16 +175,34 @@
 
 - (void)changeCoffeeScore:(CoffeeScore *)coffeeScore withValue:(int)valueToChange
 {
-    coffeeScore.coffee_count = [NSNumber numberWithInt:(coffeeScore.coffee_count.intValue+1)];
-    [self.tableView reloadData];
+
+    User *userImage = [User MR_findFirstByAttribute:@"id" withValue:coffeeScore.paid_by_id];
+    [self.imageView setImage:[UIImage imageNamed:userImage.name]];
+
+    POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerSize];
+    animation.springBounciness = 6;
+    animation.springSpeed = 9;
+    animation.toValue = [NSValue valueWithCGSize:CGSizeMake(320, 480)];
+    [self.imageView pop_addAnimation:animation forKey:@"size"];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerSize];
+        animation.springBounciness = 6;
+        animation.springSpeed = 9;
+        animation.toValue = [NSValue valueWithCGSize:CGSizeMake(0, 0)];
+        [self.imageView pop_addAnimation:animation forKey:@"size"];
+    });
     
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_by_id, @"coffee_score[paid_to_id]":coffeeScore.paid_to_id, @"coffee_score[delta]": [NSString stringWithFormat:@"%d", valueToChange] };
-    [manager POST:@"http://rounded-pong.herokuapp.com/coffee_scores.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"JSON: %@", responseObject);
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
-    }];
+//    coffeeScore.coffee_count = [NSNumber numberWithInt:(coffeeScore.coffee_count.intValue+1)];
+//    [self.tableView reloadData];
+//    
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    NSDictionary *parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_by_id, @"coffee_score[paid_to_id]":coffeeScore.paid_to_id, @"coffee_score[delta]": [NSString stringWithFormat:@"%d", valueToChange] };
+//    [manager POST:@"http://rounded-pong.herokuapp.com/coffee_scores.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSLog(@"JSON: %@", responseObject);
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"Error: %@", error);
+//    }];
 }
 
 - (UIView *)viewWithImageName:(NSString *)imageName {
@@ -188,6 +210,15 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
     imageView.contentMode = UIViewContentModeCenter;
     return imageView;
+}
+
+- (UIImageView *)imageView
+{
+    if (!_imageView) {
+        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(160, 240, 0, 0)];
+        _imageView.backgroundColor = [UIColor blackColor];
+    }
+    return _imageView;
 }
 
 -(UITableView *)tableView
