@@ -10,7 +10,7 @@
 #import "User.h"
 #import <MCSwipeTableViewCell.h>
 
-@interface UserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface UserViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) User *user;
 

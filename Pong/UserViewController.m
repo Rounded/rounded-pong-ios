@@ -12,15 +12,30 @@
 #import "CoffeeScore.h"
 #import <POP/POP.h>
 
+//#import <AVFoundation/AVFoundation.h>
+//#include <AudioToolbox/AudioToolbox.h>
+
 @interface UserViewController () <MCSwipeTableViewCellDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
+@property (nonatomic, strong) NSNumber *lastTransactionID;
+@property (nonatomic, strong) CoffeeScore *lastTransactionCoffee;
 
 @end
 
 @implementation UserViewController
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self becomeFirstResponder];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [self becomeFirstResponder];
+}
 
 - (void)viewDidLoad
 {
@@ -31,12 +46,13 @@
     self.title = self.user.name.uppercaseString;
     self.view.backgroundColor = UIColorFromRGB(GREENDARK);
 
-    self.navigationController.navigationItem.hidesBackButton = TRUE;
+//    self.navigationController.navigationItem.hidesBackButton = TRUE;
     self.view.backgroundColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.translucent = NO;
     [self.navigationController.navigationBar setTitleTextAttributes:@{ NSFontAttributeName: [UIFont fontWithName:@"Raleway-Medium" size:18], NSForegroundColorAttributeName: [UIColor whiteColor] }];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(dismiss)];
 
     self.refreshControl = [[UIRefreshControl alloc] init];
     self.refreshControl.tintColor = [UIColor whiteColor];
@@ -47,6 +63,29 @@
  
     [self.imageView setImage:[UIImage imageNamed:self.user.name]];
     [self.view addSubview:_imageView];
+}
+
+- (void)dismiss
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)topRightButtonPressed:(id)sender
+{
+//    //start a background sound
+//    NSString *soundFilePath = [[NSBundle mainBundle] pathForResource:@"rain" ofType: @"mp3"];
+//    NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:soundFilePath ];
+//    myAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:fileURL error:nil];
+//    myAudioPlayer.numberOfLoops = -1; //infinite loop
+//    [myAudioPlayer play];
+//    
+//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+//    manager.responseSerializer = [AFJSONResponseSerializer serializer];
+//    [manager PATCH:@"http://rounded-pong.herokuapp.com/rains/1.json" parameters:@{@"rain[make_it_rain]": @true} success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
 }
 
 - (void)grabScores:(id)sender
@@ -106,10 +145,12 @@
     
     static NSString *CellIdentifier = @"Cell";
     
-    MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nil];
+//    MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nil];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:nil];
     
     if (!cell) {
-        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+//        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
         
         // Remove inset of iOS 7 separators.
         if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
@@ -125,15 +166,15 @@
         cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(GREENDARKER);
     }
     
-    // Configuring the views and colors.
-    UIView *checkView = [self viewWithImageName:@"icon_win"];
-    UIColor *greenColor = UIColorFromRGB(GREENDARKER);
-    
-    UIView *crossView = [self viewWithImageName:@"icon_paid"];
-    UIColor *redColor = UIColorFromRGB(RED);
-    
-    // Setting the default inactive state color to the tableView background color.
-    [cell setDefaultColor:[UIColor lightGrayColor]];
+//    // Configuring the views and colors.
+//    UIView *checkView = [self viewWithImageName:@"icon_win"];
+//    UIColor *greenColor = UIColorFromRGB(GREENDARKER);
+//    
+//    UIView *crossView = [self viewWithImageName:@"icon_paid"];
+//    UIColor *redColor = UIColorFromRGB(RED);
+//    
+//    // Setting the default inactive state color to the tableView background color.
+//    [cell setDefaultColor:[UIColor lightGrayColor]];
     
     cell.textLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
 
@@ -147,62 +188,100 @@
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ IS OWED", user.name.uppercaseString]];
         [attrText addAttribute:NSForegroundColorAttributeName value:UIColorFromRGB(GREENDARKER) range:NSMakeRange(user.name.length, 8)];
         cell.textLabel.attributedText = attrText;
+//        [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+//            [self changeCoffeeScore:coffeeScore withValue:-1];
+//        }];
+//        [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+//            [self changeCoffeeScore:coffeeScore withValue:-1];
+//        }];
     }
-        
+    
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", abs(coffeeScore.coffee_count.intValue)];
     cell.detailTextLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
     cell.detailTextLabel.textColor = [UIColor whiteColor];
     
     // Adding gestures per state basis.
-    [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-        [self changeCoffeeScore:coffeeScore withValue:-1];
-    }];
-    
-    [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-        [self changeCoffeeScore:coffeeScore withValue:-1];
-    }];
-
-    [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-        [self changeCoffeeScore:coffeeScore withValue:1];
-    }];
-
-    [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
-        [self changeCoffeeScore:coffeeScore withValue:1];
-    }];
+//    [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+//        [self changeCoffeeScore:coffeeScore withValue:1];
+//    }];
+//
+//    [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeSwitch state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+//        [self changeCoffeeScore:coffeeScore withValue:1];
+//    }];
     
     return cell;
 }
 
+- (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    User *user = [[User MR_findAllSortedBy:@"name" ascending:YES withPredicate:[NSPredicate predicateWithFormat:@"id != %@", self.user.id]] objectAtIndex:indexPath.row];
+    CoffeeScore *coffeeScore = [CoffeeScore MR_findFirstWithPredicate:[NSPredicate predicateWithFormat:[NSString stringWithFormat:@"paid_by_id = %@ AND paid_to_id = %@", user.id, self.user.id]]];
+    
+    
+    UITableViewRowAction *boughtCoffee = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Bought Coffee" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        [self changeCoffeeScore:coffeeScore withValue:-1];
+    }];
+    boughtCoffee.backgroundColor = UIColorFromRGB(RED);
+    
+    UITableViewRowAction *won = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"I Won" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+        [self changeCoffeeScore:coffeeScore withValue:1];
+    }];
+    won.backgroundColor = UIColorFromRGB(GREENDARKER);
+    
+    if (coffeeScore.coffee_count.intValue==0) {
+        return @[won];
+    } else if(coffeeScore.coffee_count.intValue > 0) {
+        return @[won];
+    } else {
+        return @[won, boughtCoffee];
+    }
+    
+    return nil;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+}
+
+
 - (void)changeCoffeeScore:(CoffeeScore *)coffeeScore withValue:(int)valueToChange
 {
 
-    User *userImage = [User MR_findFirstByAttribute:@"id" withValue:coffeeScore.paid_by_id];
-    [self.imageView setImage:[UIImage imageNamed:userImage.name]];
-
-    POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerSize];
-    animation.springBounciness = 6;
-    animation.springSpeed = 9;
-    animation.toValue = [NSValue valueWithCGSize:CGSizeMake(320, 480)];
-    [self.imageView pop_addAnimation:animation forKey:@"size"];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerSize];
-        animation.springBounciness = 6;
-        animation.springSpeed = 9;
-        animation.toValue = [NSValue valueWithCGSize:CGSizeMake(0, 0)];
-        [self.imageView pop_addAnimation:animation forKey:@"size"];
-    });
+//    User *userImage = [User MR_findFirstByAttribute:@"id" withValue:coffeeScore.paid_by_id];
+//    [self.imageView setImage:[UIImage imageNamed:userImage.name]];
+//
+//    POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerSize];
+//    animation.springBounciness = 6;
+//    animation.springSpeed = 9;
+//    animation.toValue = [NSValue valueWithCGSize:CGSizeMake(320, 480)];
+//    [self.imageView pop_addAnimation:animation forKey:@"size"];
+//
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+//        POPSpringAnimation *animation = [POPSpringAnimation animationWithPropertyNamed:kPOPLayerSize];
+//        animation.springBounciness = 6;
+//        animation.springSpeed = 9;
+//        animation.toValue = [NSValue valueWithCGSize:CGSizeMake(0, 0)];
+//        [self.imageView pop_addAnimation:animation forKey:@"size"];
+//    });
     
-//    coffeeScore.coffee_count = [NSNumber numberWithInt:(coffeeScore.coffee_count.intValue+1)];
-//    [self.tableView reloadData];
-//    
-//    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-//    NSDictionary *parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_by_id, @"coffee_score[paid_to_id]":coffeeScore.paid_to_id, @"coffee_score[delta]": [NSString stringWithFormat:@"%d", valueToChange] };
-//    [manager POST:@"http://rounded-pong.herokuapp.com/coffee_scores.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"JSON: %@", responseObject);
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-//    }];
+    coffeeScore.coffee_count = [NSNumber numberWithInt:(coffeeScore.coffee_count.intValue+1)];
+    [self.tableView reloadData];
+    
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    NSDictionary *parameters;
+    if (valueToChange > 0) {
+        parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_by_id, @"coffee_score[paid_to_id]":coffeeScore.paid_to_id, @"coffee_score[delta]": [NSString stringWithFormat:@"%d", valueToChange] };
+    } else {
+        parameters = @{ @"coffee_score[paid_by_id]":coffeeScore.paid_to_id, @"coffee_score[paid_to_id]":coffeeScore.paid_by_id, @"coffee_score[delta]": [NSString stringWithFormat:@"%d", valueToChange] };
+    }
+    
+    [manager POST:@"http://rounded-pong.herokuapp.com/coffee_scores.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        self.lastTransactionID = (NSNumber *)[responseObject valueForKey:@"id"];
+        self.lastTransactionCoffee = coffeeScore;
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
 }
 
 - (UIView *)viewWithImageName:(NSString *)imageName {
@@ -211,6 +290,38 @@
     imageView.contentMode = UIViewContentModeCenter;
     return imageView;
 }
+
+#pragma mark Shake to undo
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Whoops!" message:@"Let me guess: You messed up cause you were carelessly poking around and now you're gonna blame the developer." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Undo", nil];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex==1) {
+        if(self.lastTransactionCoffee) {
+            self.lastTransactionCoffee.coffee_count = [NSNumber numberWithInt:(self.lastTransactionCoffee.coffee_count.intValue-1)];
+            [self.tableView reloadData];
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            [manager DELETE:[NSString stringWithFormat:@"http://rounded-pong.herokuapp.com/coffee_scores/%@.json", self.lastTransactionID] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                [self.tableView reloadData];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [SVProgressHUD showErrorWithStatus:@"Couldn't undo the action via the server. Contact support: 1-800-POO-POOP"];
+            }];
+        } else {
+            [SVProgressHUD showErrorWithStatus:@"You can't undo!"];
+        }
+    }
+}
+
+#pragma mark Getters
 
 - (UIImageView *)imageView
 {

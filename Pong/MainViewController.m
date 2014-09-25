@@ -25,7 +25,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"WHO ARE YOU?";
+    self.title = @"ROUNDED PONG";
     self.view.backgroundColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.barTintColor = UIColorFromRGB(GREEN);
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
@@ -67,6 +67,22 @@
 
 #pragma mark - Table view data stuff
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 210;
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 230)];
+    [view setBackgroundColor:UIColorFromRGB(GREENDARK)];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pong_ball"]];
+    [imageView setContentMode:UIViewContentModeScaleAspectFit];
+    [imageView setFrame:CGRectMake(0, 20, 320, 175)];
+    [view addSubview:imageView];
+    return view;
+}
+
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 54;
@@ -91,14 +107,19 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    
     cell.backgroundColor = UIColorFromRGB(GREEN);
     cell.textLabel.textColor = [UIColor whiteColor];
+    
+//    cell.backgroundColor = [UIColor whiteColor];
+//    cell.textLabel.textColor = UIColorFromRGB(GREEN);
+
 //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.selectedBackgroundView = [UIView new];
     cell.selectedBackgroundView.backgroundColor = UIColorFromRGB(GREENDARK);
     cell.textLabel.font = [UIFont fontWithName:@"Asap-Regular" size:16];
     
-    cell.textLabel.text = user.name.uppercaseString;
+    cell.textLabel.text = [NSString stringWithFormat:@"I AM %@", user.name.uppercaseString];
     
     return cell;
 }

@@ -24,6 +24,8 @@
 		C310B9581952310A0015E726 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C310B9561952310A0015E726 /* InfoPlist.strings */; };
 		C310B95A1952310A0015E726 /* PongTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C310B9591952310A0015E726 /* PongTests.m */; };
 		C310B96B195233BF0015E726 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C310B96A195233BF0015E726 /* MainViewController.m */; };
+		C341B633196D88A800CE3E0B /* rain.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C341B632196D88A800CE3E0B /* rain.mp3 */; };
+		C34C57B219705FD900713AEC /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C34C57B119705FD900713AEC /* Crashlytics.framework */; };
 		C35D9C971952468800AB00F2 /* UserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C35D9C961952468800AB00F2 /* UserViewController.m */; };
 		C35D9C9D1952485F00AB00F2 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = C35D9C9C1952485F00AB00F2 /* User.m */; };
 		C377A7E7195344B80054CBC5 /* Asap-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = C377A7E6195344B80054CBC5 /* Asap-Regular.otf */; };
@@ -62,6 +64,8 @@
 		C310B9591952310A0015E726 /* PongTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PongTests.m; sourceTree = "<group>"; };
 		C310B969195233BF0015E726 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		C310B96A195233BF0015E726 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		C341B632196D88A800CE3E0B /* rain.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = rain.mp3; sourceTree = "<group>"; };
+		C34C57B119705FD900713AEC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		C35D9C951952468800AB00F2 /* UserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserViewController.h; sourceTree = "<group>"; };
 		C35D9C961952468800AB00F2 /* UserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserViewController.m; sourceTree = "<group>"; };
 		C35D9C9B1952485F00AB00F2 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
@@ -83,6 +87,7 @@
 				C310B9351952310A0015E726 /* CoreData.framework in Frameworks */,
 				C310B9331952310A0015E726 /* UIKit.framework in Frameworks */,
 				C310B92F1952310A0015E726 /* Foundation.framework in Frameworks */,
+				C34C57B219705FD900713AEC /* Crashlytics.framework in Frameworks */,
 				B3A25BCC8D40407AA1CD41E9 /* libPods-Pong.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,6 +129,7 @@
 		C310B92D1952310A0015E726 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C34C57B119705FD900713AEC /* Crashlytics.framework */,
 				C310B92E1952310A0015E726 /* Foundation.framework */,
 				C310B9301952310A0015E726 /* CoreGraphics.framework */,
 				C310B9321952310A0015E726 /* UIKit.framework */,
@@ -137,6 +143,7 @@
 		C310B9361952310A0015E726 /* Pong */ = {
 			isa = PBXGroup;
 			children = (
+				C341B632196D88A800CE3E0B /* rain.mp3 */,
 				C377A7E6195344B80054CBC5 /* Asap-Regular.otf */,
 				C377A7E8195344DE0054CBC5 /* Raleway-Medium.otf */,
 				C310B93F1952310A0015E726 /* AppDelegate.h */,
@@ -197,6 +204,7 @@
 				C310B9281952310A0015E726 /* Frameworks */,
 				C310B9291952310A0015E726 /* Resources */,
 				C42B54A1449E4682AF7BB1DC /* Copy Pods Resources */,
+				C34C57B019705FA200713AEC /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -266,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C377A7E9195344DE0054CBC5 /* Raleway-Medium.otf in Resources */,
+				C341B633196D88A800CE3E0B /* rain.mp3 in Resources */,
 				C377A7E7195344B80054CBC5 /* Asap-Regular.otf in Resources */,
 				C310B93B1952310A0015E726 /* InfoPlist.strings in Resources */,
 				C310B9461952310A0015E726 /* Images.xcassets in Resources */,
@@ -297,6 +306,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
+		};
+		C34C57B019705FA200713AEC /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 72b6b302b8900578cbad71fa4359a66a5806817b 97e9d0583723d681451dae2543aeab2c1c796a7f76aaa05147c2e769c52dc7b9";
 		};
 		C42B54A1449E4682AF7BB1DC /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -445,10 +467,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pong/Pong-Prefix.pch";
 				INFOPLIST_FILE = "Pong/Pong-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F264D144-7AE0-44F3-8BDE-EF2E754EC5C8";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -460,10 +487,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pong/Pong-Prefix.pch";
 				INFOPLIST_FILE = "Pong/Pong-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F264D144-7AE0-44F3-8BDE-EF2E754EC5C8";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

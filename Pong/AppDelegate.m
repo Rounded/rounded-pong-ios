@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "MainViewController.h"
 #import "UserViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 @implementation AppDelegate
 
@@ -18,21 +19,24 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [Crashlytics startWithAPIKey:@"72b6b302b8900578cbad71fa4359a66a5806817b"];
+    [application setApplicationSupportsShakeToEdit:YES];
+    
     [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"Pong"];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentUserID"] && [User MR_findAll].count > 0) {
-        UserViewController *controller = [UserViewController new];
-        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
-        [self.window setRootViewController:navigationController];
-    } else {
+//    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"currentUserID"] && [User MR_findAll].count > 0) {
+//        UserViewController *controller = [UserViewController new];
+//        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:controller];
+//        [self.window setRootViewController:navigationController];
+//    } else {
         MainViewController *mainViewController = [MainViewController new];
         UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:mainViewController];
         [self.window setRootViewController:navigationController];
-    }
+//    }
     
     [self.window makeKeyAndVisible];
     return YES;
